@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎒 출산가방 체크리스트 — 아둥이·바둥이</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --mom: #e8567a;
+      --mom-light: #fdeef3;
+      --baby: #5b8dee;
+      --baby-light: #eef3fd;
+      --checked: #10b981;
+      --bg: #f8f9fb;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #e8567a 0%, #5b8dee 100%);
+      color: white;
+      padding: 28px 20px 24px;
+      text-align: center;
+    }
+    header h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 6px; }
+    header p { font-size: 0.9rem; opacity: 0.9; }
+
+    .tabs {
+      display: flex;
+      background: white;
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 14px 8px;
+      border: none;
+      background: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    .tab-btn.active-mom { color: var(--mom); border-bottom: 3px solid var(--mom); margin-bottom: -2px; }
+    .tab-btn.active-baby { color: var(--baby); border-bottom: 3px solid var(--baby); margin-bottom: -2px; }
+
+    .tab-panel { display: none; padding: 16px; max-width: 600px; margin: 0 auto; }
+    .tab-panel.active { display: block; }
+
+    .progress-bar {
+      background: var(--border);
+      border-radius: 99px;
+      height: 8px;
+      margin: 12px 0 20px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+    .mom-fill { background: var(--mom); }
+    .baby-fill { background: var(--baby); }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: -16px;
+      margin-bottom: 20px;
+    }
+
+    .section {
+      background: var(--card);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .section-header {
+      padding: 14px 16px;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .mom-header { background: var(--mom-light); color: var(--mom); }
+    .baby-header { background: var(--baby-light); color: var(--baby); }
+    .section-header .count {
+      margin-left: auto;
+      font-size: 0.78rem;
+      font-weight: 500;
+      opacity: 0.7;
+    }
+    .chevron { transition: transform 0.2s; font-size: 0.8rem; }
+    .collapsed .chevron { transform: rotate(-90deg); }
+
+    .item-list { padding: 6px 0; }
+    .item-list.collapsed { display: none; }
+
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .item:last-child { border-bottom: none; }
+    .item:active { background: #f1f5f9; }
+
+    .checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      margin-top: 1px;
+    }
+    .item.checked .checkbox {
+      background: var(--checked);
+      border-color: var(--checked);
+    }
+    .item.checked .checkbox::after {
+      content: '✓';
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .item.checked .item-text { text-decoration: line-through; color: var(--muted); }
+
+    .item-text { flex: 1; font-size: 0.92rem; line-height: 1.5; }
+    .item-note { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+    .badge {
+      font-size: 0.68rem;
+      padding: 2px 7px;
+      border-radius: 99px;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .badge-must { background: #fee2e2; color: #dc2626; }
+    .badge-rec { background: #fef3c7; color: #d97706; }
+    .badge-twin { background: #dbeafe; color: #1d4ed8; }
+
+    .tip-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 0 0 14px;
+      font-size: 0.86rem;
+      line-height: 1.6;
+      color: #78350f;
+    }
+    .tip-box strong { display: block; margin-bottom: 4px; color: #92400e; }
+
+    .reset-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-top: 8px;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      background: none;
+      color: var(--muted);
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .reset-btn:hover { background: #f1f5f9; }
+
+    footer {
+      text-align: center;
+      padding: 24px 16px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎒 출산가방 체크리스트</h1>
+  <p>아둥이 &amp; 바둥이를 위한 준비 — 가방 2개 완벽 체크!</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active-mom" onclick="switchTab('mom')">🏥 병원 입원 가방<br><small>엄마 케어 위주</small></button>
+  <button class="tab-btn" onclick="switchTab('baby')">🍼 조리원 가방<br><small>아기 케어 위주</small></button>
+</div>
+
+<!-- ══════════════════════════════════════
+     병원 입원 가방 (엄마 케어)
+════════════════════════════════════════ -->
+<div id="panel-mom" class="tab-panel active">
+
+  <div class="tip-box" style="margin-top:16px">
+    <strong>💡 병원 가방 포인트</strong>
+    입원 2~4일 동안 사용할 물품. 제왕절개 예정이라 수술 후 케어 물품 필수!
+    남편 보호자 물품도 함께 챙길 것. 아기 물품은 조리원 가방에 넣어 남편이 나중에 가져와도 됨.
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill mom-fill" id="mom-bar" style="width:0%"></div></div>
+  <div class="progress-label">
+    <span id="mom-count">0 / 0 완료</span>
+    <span id="mom-pct">0%</span>
+  </div>
+
+  <!-- 서류 & 결제 -->
+  <div class="section">
+    <div class="section-header mom-header" onclick="toggleSection(this)">
+      📄 서류 &amp; 결제 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">신분증<div class="item-note">산모·보호자 각각</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">산모 수첩</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">건강보험증</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">신용카드 / 현금<div class="item-note">의료비, 조리원 추가 비용</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">실비보험 서류 사본<div class="item-note">제왕절개 실비 청구용 — 진단서·영수증 챙기기</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">인감도장<div class="item-note">출생신고 등 서류 처리용</div></div><span class="badge badge-rec">권장</span></li>
+    </ul>
+  </div>
+
+  <!-- 산모 위생 & 케어 -->
+  <div class="section">
+    <div class="section-header mom-header" onclick="toggleSection(this)">
+      🩹 산모 위생 &amp; 케어 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">산모 패드 (대형) 1팩<div class="item-note">병원에서 주는 경우도 있으니 미리 문의</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">일회용 속옷 5장 이상<div class="item-note">산모용 팬티형 생리대 겸용도 OK</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">수유 브라 2개<div class="item-note">앞여밈 또는 수유 전용</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">드라이 샴푸 / 샤워 티슈<div class="item-note">제왕절개 후 바로 샤워 못 할 때</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">세면도구 (치약·칫솔·수건)</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">미끄럼 방지 슬리퍼</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">스킨케어 기초 (로션·스킨)<div class="item-note">간단한 것만. 입원 중 피부 건조해짐</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">립밤<div class="item-note">입원 중 입술 건조 심함</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">보온 양말<div class="item-note">수술실·병실 추울 수 있음</div></div><span class="badge badge-rec">권장</span></li>
+    </ul>
+  </div>
+
+  <!-- 제왕절개 전용 -->
+  <div class="section">
+    <div class="section-header mom-header" onclick="toggleSection(this)">
+      🔪 제왕절개 전용 (필수!) <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">산후 복대<div class="item-note">수술 1~2주 후부터 착용. 복근 지지</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">작은 쿠션 or 베개<div class="item-note">기침·웃을 때 절개 부위 눌러주면 통증 완화!</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">앞이 트인 잠옷·가운<div class="item-note">수술 후 움직이기 편한 옷. 수유 위해 앞여밈 권장</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">손목 보호대<div class="item-note">수술 후 수액·링거 부위 보호</div></div><span class="badge badge-rec">권장</span></li>
+    </ul>
+  </div>
+
+  <!-- 수유 준비 -->
+  <div class="section">
+    <div class="section-header mom-header" onclick="toggleSection(this)">
+      🍼 수유 준비 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">수유 쿠션<div class="item-note">같은 걸 조리원·집에서도 쓸 것이므로 미리 지참</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">유축기 + 부품<div class="item-note">입원 중 바로 쓸 수 있게</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">모유수유 패드<div class="item-note">유방 흘림 방지</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">nipple cream (유두 크림)<div class="item-note">수유 초기 유두 통증 완화</div></div><span class="badge badge-rec">권장</span></li>
+    </ul>
+  </div>
+
+  <!-- 생활 편의 -->
+  <div class="section">
+    <div class="section-header mom-header" onclick="toggleSection(this)">
+      📱 생활 편의 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">긴 충전 케이블 (2m+)<div class="item-note">병원 침대에서 콘센트 멀 수 있음</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">이어폰<div class="item-note">영상·음악 감상, 입원 중 소일거리</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">스트로우 텀블러<div class="item-note">누워서 마시기 편함. 수술 후 필수!</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">간식·음료<div class="item-note">미역국 먹기 싫을 때. 선호 간식 챙겨오면 좋음</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">퇴원용 편한 옷 1벌<div class="item-note">헐렁한 원피스 or 트레이닝복 권장</div></div><span class="badge badge-must">필수</span></li>
+    </ul>
+  </div>
+
+  <!-- 보호자(남편) -->
+  <div class="section">
+    <div class="section-header mom-header" onclick="toggleSection(this)">
+      👨 보호자 (남편) 준비물 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">세면도구 (칫솔·치약·수건)</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">편한 옷 2~3벌<div class="item-note">입원 기간 동안 간호 도울 옷</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">간이 이불 or 담요<div class="item-note">보호자 침대/소파가 추울 수 있음</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">간식·음료</div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">충전기 + 보조배터리</div><span class="badge badge-must">필수</span></li>
+    </ul>
+  </div>
+
+  <button class="reset-btn" onclick="resetTab('mom')">🔄 이 탭 체크 초기화</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     조리원 가방 (아기 케어)
+════════════════════════════════════════ -->
+<div id="panel-baby" class="tab-panel">
+
+  <div class="tip-box" style="margin-top:16px">
+    <strong>💡 조리원 가방 포인트</strong>
+    2~3주 체류. 조리원 제공 물품 먼저 확인! (배냇저고리·기저귀 등 제공하는 곳 많음)
+    쌍둥이는 아기 용품 2배로 챙길 것. 남편이 퇴원 후 가져와도 됨.
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill baby-fill" id="baby-bar" style="width:0%"></div></div>
+  <div class="progress-label">
+    <span id="baby-count">0 / 0 완료</span>
+    <span id="baby-pct">0%</span>
+  </div>
+
+  <!-- 아기 의류 -->
+  <div class="section">
+    <div class="section-header baby-header" onclick="toggleSection(this)">
+      👶 아기 의류 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">배냇저고리 3~4벌<div class="item-note">조리원 제공 여부 확인. 60사이즈</div></div><span class="badge badge-twin">×2</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">신생아 우주복 2~3벌<div class="item-note">쫄쫄이 타입 편함. 스냅 확인</div></div><span class="badge badge-twin">×2</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">속싸개 2~3장<div class="item-note">모로반사 방지. 얇은 거즈 타입 권장</div></div><span class="badge badge-twin">×2</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">겉싸개 1~2장<div class="item-note">외출·이동 시. 4월 출산이라 얇은 것</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">신생아 모자 2개</div><span class="badge badge-twin">×2</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">손싸개·발싸개<div class="item-note">얼굴 긁힘 방지. 너무 오래 쓰지는 말 것</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">보행용 카시트 2개<div class="item-note">퇴원 시 반드시 필요! 미리 설치 완료</div></div><span class="badge badge-must">필수</span></li>
+    </ul>
+  </div>
+
+  <!-- 수유·수유용품 -->
+  <div class="section">
+    <div class="section-header baby-header" onclick="toggleSection(this)">
+      🍼 수유 &amp; 분유 용품 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">젖병 3~4개<div class="item-note">닥터브라운 권장(배앓이 방지). 유리 or BPA-free</div></div><span class="badge badge-twin">×2세트</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">분유 소형 1개<div class="item-note">혼합수유 대비. 맞는 분유 찾기용</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">젖꼭지 (슬로우 플로우)<div class="item-note">신생아용 1단계. 유속 선호 혼란 방지</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">가제 손수건 10장+<div class="item-note">수유 후 트림시키기, 입 닦기 등 다양하게 활용</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">분유 포트 or 휴대용 온도계<div class="item-note">조리원에 있지만 개인 거 있으면 편함</div></div><span class="badge badge-rec">권장</span></li>
+    </ul>
+  </div>
+
+  <!-- 기저귀 & 위생 -->
+  <div class="section">
+    <div class="section-header baby-header" onclick="toggleSection(this)">
+      🧻 기저귀 &amp; 위생 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">신생아 기저귀 1팩<div class="item-note">조리원 제공 여부 확인. 제공 안 하면 1팩 필요</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">물티슈 2~3팩<div class="item-note">무향·무알코올 신생아용</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">배꼽 소독 용품<div class="item-note">소독약·면봉. 조리원 제공 여부 확인</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">아기 전용 세제·섬유유연제<div class="item-note">무향 순한 것. 기저귀발진 방지</div></div><span class="badge badge-rec">권장</span></li>
+    </ul>
+  </div>
+
+  <!-- 엄마 조리원 용품 -->
+  <div class="section">
+    <div class="section-header baby-header" onclick="toggleSection(this)">
+      💆 엄마 — 조리원 추가 용품 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">산모 패드 추가분<div class="item-note">조리원 제공보다 부족할 수 있음</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">수유 브라 3~4개<div class="item-note">조리원 체류 기간 대비 여유 있게</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">편한 잠옷 3벌<div class="item-note">수유 편한 앞여밈 잠옷</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">보정 속옷 / 복대<div class="item-note">제왕절개 후 1~2주부터 착용</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">개인 수유 쿠션<div class="item-note">퇴소 후에도 같은 자세로 수유 가능</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">손목 보호대 (양손)<div class="item-note">쌍둥이 수유로 손목 혹사 예상</div></div><span class="badge badge-twin">쌍둥이 강추</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">개인 스킨케어<div class="item-note">2~3주 체류. 기초 + 바디로션</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">세면도구<div class="item-note">칫솔·치약·샴푸·린스 등</div></div><span class="badge badge-must">필수</span></li>
+    </ul>
+  </div>
+
+  <!-- 퇴소 준비 -->
+  <div class="section">
+    <div class="section-header baby-header" onclick="toggleSection(this)">
+      🏠 조리원 퇴소 준비 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">퇴소일 카시트 2개 준비<div class="item-note">조리원→집 이동용. 미리 차에 설치</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">퇴소용 아기 외출복 2벌<div class="item-note">4월이니 봄옷. 레이어드 가능한 것</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">집 준비 확인<div class="item-note">분유 포트 끓여두기, 방 온습도 세팅</div></div><span class="badge badge-must">필수</span></li>
+    </ul>
+  </div>
+
+  <button class="reset-btn" onclick="resetTab('baby')">🔄 이 탭 체크 초기화</button>
+</div>
+
+<footer>
+  🐹 성북구 햄스터가 준비한 아둥이·바둥이 출산 가방 체크리스트<br>
+  웹 검색 + 노션 육아 영상 요약 종합 · 제왕절개 맞춤 버전
+</footer>
+
+<script>
+  // ── 체크 상태 저장 ──────────────────────
+  const KEY = 'birthbag-checks';
+  let checks = JSON.parse(localStorage.getItem(KEY) || '{}');
+
+  function save() { localStorage.setItem(KEY, JSON.stringify(checks)); }
+
+  function toggle(el) {
+    const id = getItemId(el);
+    checks[id] = !checks[id];
+    el.classList.toggle('checked', checks[id]);
+    save();
+    updateProgress();
+  }
+
+  function getItemId(el) {
+    const text = el.querySelector('.item-text').childNodes[0].textContent.trim();
+    const panel = el.closest('.tab-panel').id;
+    return `${panel}::${text}`;
+  }
+
+  function restoreChecks() {
+    document.querySelectorAll('.item').forEach(el => {
+      const id = getItemId(el);
+      if (checks[id]) el.classList.add('checked');
+    });
+    updateProgress();
+  }
+
+  function resetTab(tab) {
+    if (!confirm('이 탭의 체크를 모두 초기화할까요?')) return;
+    document.querySelectorAll(`#panel-${tab} .item`).forEach(el => {
+      const id = getItemId(el);
+      delete checks[id];
+      el.classList.remove('checked');
+    });
+    save();
+    updateProgress();
+  }
+
+  // ── 진행률 업데이트 ──────────────────────
+  function updateProgress() {
+    ['mom', 'baby'].forEach(tab => {
+      const items = document.querySelectorAll(`#panel-${tab} .item`);
+      const done = document.querySelectorAll(`#panel-${tab} .item.checked`).length;
+      const total = items.length;
+      const pct = total ? Math.round(done / total * 100) : 0;
+      document.getElementById(`${tab}-bar`).style.width = pct + '%';
+      document.getElementById(`${tab}-count`).textContent = `${done} / ${total} 완료`;
+      document.getElementById(`${tab}-pct`).textContent = pct + '%';
+    });
+    updateSectionCounts();
+  }
+
+  function updateSectionCounts() {
+    document.querySelectorAll('.section').forEach(sec => {
+      const items = sec.querySelectorAll('.item');
+      const done = sec.querySelectorAll('.item.checked').length;
+      const countEl = sec.querySelector('.count');
+      if (countEl) countEl.textContent = `${done}/${items.length}`;
+    });
+  }
+
+  // ── 탭 전환 ──────────────────────────────
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`panel-${tab}`).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active-mom', 'active-baby');
+    });
+    const btns = document.querySelectorAll('.tab-btn');
+    if (tab === 'mom') btns[0].classList.add('active-mom');
+    else btns[1].classList.add('active-baby');
+  }
+
+  // ── 섹션 접기/펼치기 ──────────────────────
+  function toggleSection(headerEl) {
+    headerEl.classList.toggle('collapsed');
+    const list = headerEl.nextElementSibling;
+    if (list) list.classList.toggle('collapsed');
+  }
+
+  // ── 초기화 ──────────────────────────────
+  restoreChecks();
+</script>
+</body>
+</html>
