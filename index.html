@@ -220,9 +220,11 @@
 <div id="panel-mom" class="tab-panel active">
 
   <div class="tip-box" style="margin-top:16px">
-    <strong>💡 병원 가방 포인트</strong>
-    입원 2~4일 동안 사용할 물품. 제왕절개 예정이라 수술 후 케어 물품 필수!
-    남편 보호자 물품도 함께 챙길 것. 아기 물품은 조리원 가방에 넣어 남편이 나중에 가져와도 됨.
+    <strong>🏥 서울대병원 산과 입원 안내</strong>
+    <b>4/8(화)</b> 오후 12~1시 본관 2층 입원수속실 → 입원<br>
+    <b>4/8 자정부터 금식</b> · <b>4/9(수)</b> 제왕절개 수술<br>
+    산과 병실 = 모자동실 가능 (타과 배정 시 보호자 제한 있을 수 있음)<br>
+    ⚠️ 매니큐어/젤네일/페디큐어 제거 · 피어싱/귀걸이/목걸이 두고 가기
   </div>
 
   <div class="progress-bar"><div class="progress-fill mom-fill" id="mom-bar" style="width:0%"></div></div>
@@ -237,12 +239,15 @@
       📄 서류 &amp; 결제 <span class="count"></span><span class="chevron">▾</span>
     </div>
     <ul class="item-list">
-      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">신분증<div class="item-note">산모·보호자 각각</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">신분증<div class="item-note">산모·보호자 각각 (입원수속 시 확인)</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">진료카드</div><span class="badge badge-must">필수</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">산모 수첩</div><span class="badge badge-must">필수</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">건강보험증</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">복용 중인 약물 + 처방전<div class="item-note">병동 간호사에게 제출</div></div><span class="badge badge-must">필수</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">신용카드 / 현금<div class="item-note">의료비, 조리원 추가 비용</div></div><span class="badge badge-must">필수</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">실비보험 서류 사본<div class="item-note">제왕절개 실비 청구용 — 진단서·영수증 챙기기</div></div><span class="badge badge-rec">권장</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">인감도장<div class="item-note">출생신고 등 서류 처리용</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">보호자 이름표</div><span class="badge badge-must">필수</span></li>
     </ul>
   </div>
 
@@ -252,12 +257,15 @@
       🩹 산모 위생 &amp; 케어 <span class="count"></span><span class="chevron">▾</span>
     </div>
     <ul class="item-list">
-      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">산모 패드 (대형) 1팩<div class="item-note">병원에서 주는 경우도 있으니 미리 문의</div></div><span class="badge badge-must">필수</span></li>
-      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">일회용 속옷 5장 이상<div class="item-note">산모용 팬티형 생리대 겸용도 OK</div></div><span class="badge badge-must">필수</span></li>
-      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">수유 브라 2개<div class="item-note">앞여밈 또는 수유 전용</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">1자형 산모패드 20매</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">팬티형 기저귀 20개</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">안심깔개매트 5개</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">임산부용 압박스타킹<div class="item-note">수술 후 혈전 예방 필수</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">수유 브라 + 수유패드<div class="item-note">앞여밈 또는 수유 전용</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">수건</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">세면도구 (치약·칫솔) + 물컵</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">편한 실내화<div class="item-note">미끄럼 방지</div></div><span class="badge badge-must">필수</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">드라이 샴푸 / 샤워 티슈<div class="item-note">제왕절개 후 바로 샤워 못 할 때</div></div><span class="badge badge-must">필수</span></li>
-      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">세면도구 (치약·칫솔·수건)</div><span class="badge badge-must">필수</span></li>
-      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">미끄럼 방지 슬리퍼</div><span class="badge badge-must">필수</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">스킨케어 기초 (로션·스킨)<div class="item-note">간단한 것만. 입원 중 피부 건조해짐</div></div><span class="badge badge-rec">권장</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">립밤<div class="item-note">입원 중 입술 건조 심함</div></div><span class="badge badge-rec">권장</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">보온 양말<div class="item-note">수술실·병실 추울 수 있음</div></div><span class="badge badge-rec">권장</span></li>
@@ -284,7 +292,8 @@
     </div>
     <ul class="item-list">
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">수유 쿠션<div class="item-note">같은 걸 조리원·집에서도 쓸 것이므로 미리 지참</div></div><span class="badge badge-must">필수</span></li>
-      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">유축기 + 부품<div class="item-note">입원 중 바로 쓸 수 있게</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">유축기 + 유축깔대기<div class="item-note">입원 중 바로 쓸 수 있게</div></div><span class="badge badge-rec">권장</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">유축깔대기 세척용 실리콘 파우치 + 건조대<div class="item-note">유축기 챙길 경우 함께 필수</div></div><span class="badge badge-rec">권장</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">모유수유 패드<div class="item-note">유방 흘림 방지</div></div><span class="badge badge-rec">권장</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">nipple cream (유두 크림)<div class="item-note">수유 초기 유두 통증 완화</div></div><span class="badge badge-rec">권장</span></li>
     </ul>
@@ -301,6 +310,30 @@
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">스트로우 텀블러<div class="item-note">누워서 마시기 편함. 수술 후 필수!</div></div><span class="badge badge-must">필수</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">간식·음료<div class="item-note">미역국 먹기 싫을 때. 선호 간식 챙겨오면 좋음</div></div><span class="badge badge-rec">권장</span></li>
       <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">퇴원용 편한 옷 1벌<div class="item-note">헐렁한 원피스 or 트레이닝복 권장</div></div><span class="badge badge-must">필수</span></li>
+    </ul>
+  </div>
+
+  <!-- 신생아 (신생아실 입원용) -->
+  <div class="section">
+    <div class="section-header baby-header" onclick="toggleSection(this)">
+      👶 신생아실 입원 물품 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">신생아 기저귀 1단계 — 120개<div class="item-note">쌍둥이 기준. 넉넉히 준비</div></div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">물티슈 3팩 이상<div class="item-note">무향·무알코올 신생아용</div></div><span class="badge badge-must">필수</span></li>
+    </ul>
+  </div>
+
+  <!-- 퇴원 준비 -->
+  <div class="section">
+    <div class="section-header mom-header" onclick="toggleSection(this)">
+      🏠 퇴원 시 필요 <span class="count"></span><span class="chevron">▾</span>
+    </div>
+    <ul class="item-list">
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">배냇저고리</div><span class="badge badge-twin">×2</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">속싸개 + 겉싸개</div><span class="badge badge-twin">×2</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">기저귀</div><span class="badge badge-must">필수</span></li>
+      <li class="item" onclick="toggle(this)"><div class="checkbox"></div><div class="item-text">귀가 중 수유 젖병<div class="item-note">필요시</div></div><span class="badge badge-rec">권장</span></li>
     </ul>
   </div>
 
